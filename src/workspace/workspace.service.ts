@@ -10,25 +10,27 @@ export class WorkspaceService {
   ) {}
 
   async create(createWorkspaceDto: any) {
-    const createdWorkspace = new this.workspaceRepository(createWorkspaceDto);
-    return createdWorkspace.save();
+    const createdWorkspace = await new this.workspaceRepository(
+      createWorkspaceDto,
+    );
+    return await createdWorkspace.save();
   }
 
   async findAll() {
-    return this.workspaceRepository.find().exec();
+    return await this.workspaceRepository.find().exec();
   }
 
   async findOne(id: string) {
-    return this.workspaceRepository.findById(id).exec();
+    return await this.workspaceRepository.findById(id).exec();
   }
 
   async update(id: string, updateWorkspaceDto) {
-    return this.workspaceRepository
+    return await this.workspaceRepository
       .findByIdAndUpdate(id, updateWorkspaceDto, { new: true })
       .exec();
   }
 
   async remove(id: string) {
-    return this.workspaceRepository.findByIdAndRemove(id).exec();
+    return await this.workspaceRepository.findByIdAndDelete(id);
   }
 }

@@ -18,6 +18,7 @@ export class WorkspaceController {
   constructor(private readonly workspaceService: WorkspaceService) {}
 
   @Post()
+  @Header('Accept', 'application/json')
   @UseInterceptors(FileInterceptor('logo')) // 'logo' should match the field name in the form data
   async createWorkspace(
     @UploadedFile() file: Express.Multer.File, // Access the uploaded file
