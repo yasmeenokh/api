@@ -17,19 +17,44 @@ import { FileInterceptor } from '@nestjs/platform-express';
 export class WorkspaceController {
   constructor(private readonly workspaceService: WorkspaceService) {}
 
+  // @Post()
+  // @Header('Accept', 'application/json')
+  // @UseInterceptors(FileInterceptor('logo')) // 'logo' should match the field name in the form data
+  // async createWorkspace(
+  //   @UploadedFile() file: Express.Multer.File, // Access the uploaded file
+  //   @Body() body: any, // Access other form fields sent as JSON data
+  // ): Promise<any> {
+  //   const data = {
+  //     name: body.name,
+  //     logo: file.buffer.toString('base64'), // Convert the file to base64 or use other appropriate handling
+  //     users: JSON.parse(body.users), // Parse the stringified JSON back to an array
+  //     // Other form fields
+  //   };
+  //   // Process and save the data using your workspace service
+  //   const workspace = await this.workspaceService.create(data);
+  //   return workspace;
+  // }
+
   @Post()
   @Header('Accept', 'application/json')
-  @UseInterceptors(FileInterceptor('logo')) // 'logo' should match the field name in the form data
+  @UseInterceptors(
+    FileInterceptor('logo', { limits: { fileSize: 1024 * 1024 * 5 } }),
+  )
   async createWorkspace(
-    @UploadedFile() file: Express.Multer.File, // Access the uploaded file
-    @Body() body: any, // Access other form fields sent as JSON data
+    @UploadedFile() file: Express.Multer.File,
+    @Body() body: any,
   ): Promise<any> {
+    let logo = '';
+    if (file) {
+      logo = file.buffer.toString('base64');
+    }
+
     const data = {
       name: body.name,
-      logo: file.buffer.toString('base64'), // Convert the file to base64 or use other appropriate handling
-      users: JSON.parse(body.users), // Parse the stringified JSON back to an array
-      // Other form fields
+      logo: logo,
+      users: JSON.parse(body.users),
     };
+
     // Process and save the data using your workspace service
     const workspace = await this.workspaceService.create(data);
     return workspace;
