@@ -11,8 +11,8 @@ export class Workspace extends Document {
   @Prop({ required: true })
   name: string;
 
-  @Prop() // Assuming 'logo' is a string representing the image URL
-  logo: string;
+  @Prop({ required: false })
+  logo?: string;
 
   @Prop({ type: [{ id: String, name: String, email: String }] })
   users: User[];
